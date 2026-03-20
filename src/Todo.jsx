@@ -2,15 +2,17 @@ import { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { v4 as uuidv4 } from "uuid";
 import "./Todo.css";
+import { CiMenuKebab } from "react-icons/ci";
 
 function Todo() {
-
   const [todos, setTodos] = useState([
-    { id: uuidv4(), task: "Sample Task" }
+    { id: uuidv4(), task: "Sample Task", completed: false },
   ]);
 
   const [newTodo, setNewTodo] = useState("");
-  const [editId, setEditId] = useState(null)
+  const [editId, setEditId] = useState(null);
+
+  const [btnToggler , setBtnToggler] = useState(false)
 
   // input change
   const changeHandler = (event) => {
@@ -27,34 +29,45 @@ function Todo() {
     }
     if (editId !== null) {
       const updateTodos = todos.map((todo) => {
-        return todo.id === editId ? {...todo ,  task: newTodo} : todo
-      } )
+        return todo.id === editId ? { ...todo, task: newTodo } : todo;
+      });
 
-      setTodos(updateTodos)
+      setTodos(updateTodos);
       setEditId(null);
       setNewTodo("");
-      console.log(updateTodos)
-      return
+      console.log(updateTodos);
+      return;
     }
 
-    setTodos([
-      ...todos,
-      { id: uuidv4(), task: newTodo }
-    ]);
+    setTodos([...todos, { id: uuidv4(), task: newTodo, completed: false }]);
 
     setNewTodo(""); // ✅ input clear
   };
 
   // delete todo
   const deleteTodoHandler = (id) => {
-    const updateTodos = todos.filter((todo) => todo.id !== id )
-    setTodos(updateTodos)
+    const updateTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updateTodos);
   };
 
   // Update todo
   const startEdithandler = (todo) => {
-    setEditId(todo.id)
-    setNewTodo(todo.task)
+    setEditId(todo.id);
+    setNewTodo(todo.task);
+  };
+
+  // CheckBox
+  const checkBoxHandler = (id) => {
+    const updateTodos = todos.map((todo) => {
+      return todo.id === id ? { ...todo, completed: !todo.completed } : todo;
+    });
+
+    setTodos(updateTodos);
+  };
+
+  // btn toggler
+  const btnTogglerHandler = () => {
+    setBtnToggler(!btnToggler)
   }
 
   return (
@@ -69,7 +82,9 @@ function Todo() {
         </header>
 
         <form className="todo-form" onSubmit={formHandler}>
-          <label className="todo-label" htmlFor="task">Task</label>
+          <label className="todo-label" htmlFor="task">
+            Task
+          </label>
 
           <div className="todo-input-row">
             <input
@@ -97,22 +112,48 @@ function Todo() {
           <ul className="todo-list">
             {todos.map((todo) => (
               <li className="todo-item" key={todo.id}>
-                <span className="todo-text">{todo.task}</span>
+                <span
+                  className={`todo-text ${todo.completed ? "is-done" : ""}`}
+                >
+                  {todo.task}
+                </span>
 
                 <div className="todo-actions">
-                  <button
-                    className="todo-btn todo-btn-delete"
-                    onClick={() => deleteTodoHandler(todo.id)}
-                  >
-                    Delete
-                  </button>
+                  <input
+                    className="todo-checkbox"
+                    type="checkbox"
+                    name="checkbox"
+                    id="checkbox"
+                    checked={todo.completed}
+                    onChange={() => {
+                      checkBoxHandler(todo.id);
+                    }}
+                  />
 
-                  <button
-                    className="todo-btn todo-btn-edit"
-                    onClick={() => startEdithandler(todo)}
-                  >
-                    Edit
-                  </button>
+                  <div className="todo-menu-wrap">
+                    <button
+                      className="todo-menu-trigger"
+                      onClick={btnTogglerHandler}
+                      aria-label="Open todo actions"
+                    >
+                      <CiMenuKebab />
+                    </button>
+                    <div className={`todo-menu ${btnToggler ? "is-open" : ""}`}>
+                      <button
+                        className="todo-btn todo-btn-delete"
+                        onClick={() => deleteTodoHandler(todo.id)}
+                      >
+                        Delete
+                      </button>
+
+                      <button
+                        className="todo-btn todo-btn-edit"
+                        onClick={() => startEdithandler(todo)}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </li>
             ))}
