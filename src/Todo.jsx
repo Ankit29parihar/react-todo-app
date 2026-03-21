@@ -114,11 +114,8 @@ function Todo() {
               <li className="todo-item" key={todo.id}>
                 <span
                   className={`todo-text ${todo.completed ? "is-done" : ""}`}
+                  style={{display: "flex" , alignItems: "center"}}
                 >
-                  {todo.task}
-                </span>
-
-                <div className="todo-actions">
                   <input
                     className="todo-checkbox"
                     type="checkbox"
@@ -129,16 +126,10 @@ function Todo() {
                       checkBoxHandler(todo.id);
                     }}
                   />
+                  {todo.task}
+                </span>
 
-                  <div className="todo-menu-wrap">
-                    <button
-                      className="todo-menu-trigger"
-                      onClick={btnTogglerHandler}
-                      aria-label="Open todo actions"
-                    >
-                      <CiMenuKebab />
-                    </button>
-                    <div className={`todo-menu ${btnToggler ? "is-open" : ""}`}>
+                <div className="todo-actions">
                       <button
                         className="todo-btn todo-btn-delete"
                         onClick={() => deleteTodoHandler(todo.id)}
@@ -152,9 +143,8 @@ function Todo() {
                       >
                         Edit
                       </button>
-                    </div>
+                   
                   </div>
-                </div>
               </li>
             ))}
           </ul>
