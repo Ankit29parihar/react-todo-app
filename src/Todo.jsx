@@ -2,7 +2,7 @@ import { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { v4 as uuidv4 } from "uuid";
 import "./Todo.css";
-import { CiMenuKebab } from "react-icons/ci";
+
 
 function Todo() {
   const [todos, setTodos] = useState([
@@ -11,8 +11,9 @@ function Todo() {
 
   const [newTodo, setNewTodo] = useState("");
   const [editId, setEditId] = useState(null);
+  const [error , setError] = useState("");
 
-  const [btnToggler , setBtnToggler] = useState(false)
+
 
   // input change
   const changeHandler = (event) => {
@@ -24,9 +25,12 @@ function Todo() {
     e.preventDefault();
 
     if (newTodo.trim() === "") {
-      alert("please enter first task and then submit");
+      setError("please enter first task and then submit")
       return;
     }
+
+
+
     if (editId !== null) {
       const updateTodos = todos.map((todo) => {
         return todo.id === editId ? { ...todo, task: newTodo } : todo;
@@ -35,6 +39,7 @@ function Todo() {
       setTodos(updateTodos);
       setEditId(null);
       setNewTodo("");
+      setError("")
       console.log(updateTodos);
       return;
     }
@@ -42,6 +47,7 @@ function Todo() {
     setTodos([...todos, { id: uuidv4(), task: newTodo, completed: false }]);
 
     setNewTodo(""); // ✅ input clear
+     setError("")
   };
 
   // delete todo
@@ -65,10 +71,7 @@ function Todo() {
     setTodos(updateTodos);
   };
 
-  // btn toggler
-  const btnTogglerHandler = () => {
-    setBtnToggler(!btnToggler)
-  }
+
 
   return (
     <div className="todo-page">
@@ -101,6 +104,11 @@ function Todo() {
               {editId !== null ? "Save" : "Add"}
             </button>
           </div>
+          {error && (
+            <p className="todo-error" role="alert">
+              {error}
+            </p>
+          )}
         </form>
 
         <section className="todo-list-section">

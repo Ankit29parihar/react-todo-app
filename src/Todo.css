@@ -75,6 +75,44 @@ body {
   margin-bottom: 28px;
 }
 
+.todo-error {
+  margin: 10px 4px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 138, 128, 0.14);
+  border: 1px solid rgba(255, 138, 128, 0.35);
+  color: #ffb3ab;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  animation: todo-error-pop 240ms ease-out;
+}
+
+.todo-error::before {
+  content: "!";
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 138, 128, 0.3);
+  color: #ffd1cc;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+@keyframes todo-error-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .todo-label {
   display: inline-block;
   font-size: 14px;
